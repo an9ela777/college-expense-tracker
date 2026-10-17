@@ -1,0 +1,323 @@
+/* ==========================================
+   🎨 變數與色系主題設定
+   ========================================== */
+
+/* 1. 藍*/
+:root {
+    --bg-color: #f4f6f9;/*背景色*/
+    --card-bg: #ffffff;
+    --text-color: #333333;/*大的文字顏色*/
+    --text-muted: #666666;/*小的文字顏色*/
+    --border-color: #e9ecef;/*框框的邊*/
+    --sidebar-bg: #d1d9e593;/*左側底色*/
+    --primary-color: #b4bdcd;/*主題色*/
+}
+
+/* 2. 質感紫色系 */
+[data-theme="purple"] {
+    --bg-color: #f0eef9;
+    --card-bg: #ffffff;
+    --text-color: #190a35;
+    --text-muted: #270e51;
+    --border-color: #dad7e2;
+    --sidebar-bg: #e2e1eb;
+    --primary-color: #b6b1c4;
+}
+
+/* 3. 綠色 */
+[data-theme="green"] {
+    --bg-color: #e9f4ef;
+    --card-bg: #ffffff;
+    --text-color: #073428;
+    --text-muted: #074735;
+    --border-color: #dbe5e0;
+    --sidebar-bg: #dfece6;
+    --primary-color: #b5d4ca;
+}
+/* 4. 暖橘 */
+[data-theme="orange"] {
+    --bg-color: #f7f1eb;
+    --card-bg: #ffffff;
+    --text-color: #59210e;
+    --text-muted: #7b2a0a;
+    --border-color: #ffedd5;
+    --sidebar-bg: #f6e4d0;
+    --primary-color: #d872297b;
+}
+
+/* 5. 粉色*/
+[data-theme="pink"] {
+    --bg-color: #fff1f2;
+    --card-bg: #ffffff;
+    --text-color: #881337;
+    --text-muted: #e11d48;
+    --border-color: #ffe4e6;
+    --sidebar-bg: #f7eaf1c4;
+    --primary-color: #dda4ac;
+}
+/* 7. 黃色 */
+[data-theme="yellow"] {
+    --bg-color: #fefce8;
+    --card-bg: #ffffff;
+    --text-color: #55573f;
+    --text-muted: #a16207;
+    --border-color: #faf6d5;
+    --sidebar-bg: #fdf3c2;
+    --primary-color: #f6dd91;
+}
+
+/* ==========================================
+   📐 基礎排版與全站變數套用
+   ========================================== */
+* { 
+    box-sizing: border-box; 
+}
+
+body { 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    margin: 0; 
+    padding: 0; 
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    display: flex; 
+    height: 100vh; 
+    overflow: hidden; 
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* 左側選單欄 */
+.sidebar { 
+    width: 260px; 
+    background-color: var(--sidebar-bg) !important; 
+    color: var(--text-color); 
+    display: flex; 
+    flex-direction: column; 
+    padding: 20px; 
+    flex-shrink: 0; 
+    transition: background-color 0.3s ease;
+}
+
+.sidebar h2 { 
+    font-size: 20px; 
+    margin-bottom: 30px; 
+    text-align: center; 
+    color: var(--text-color); 
+}
+
+.sidebar a { 
+    color: var(--text-color); 
+    text-decoration: none; 
+    padding: 12px 15px; 
+    margin-bottom: 8px; 
+    border-radius: 6px; 
+    transition: 0.2s; 
+    cursor: pointer; 
+    display: block; 
+}
+
+.sidebar a:hover, 
+.sidebar a.active, 
+.sidebar button.active, 
+.sidebar .menu-item.active { 
+    background-color: var(--primary-color) !important; 
+    color: #ffffff !important; 
+}
+
+/* 右側主內容區 */
+.main-content { 
+    flex: 1; 
+    padding: 30px; 
+    overflow-y: auto; 
+}
+
+.header-section { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 25px; 
+    background: var(--card-bg); 
+    color: var(--text-color);
+    padding: 15px 25px; 
+    border-radius: 8px; 
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
+}
+
+/* 頁面切換控制：預設隱藏，透過 JS 切換顯示 */
+.page-view { display: none; }
+.page-view.active-page { display: block; }
+
+/* 卡片總覽 */
+.card-container { display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap; }
+.card { 
+    flex: 1; 
+    min-width: 200px; 
+    background: var(--card-bg); 
+    color: var(--text-color);
+    padding: 20px; 
+    border-radius: 8px; 
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
+    border-left: 5px solid var(--primary-color); 
+}
+.card.warning { border-left-color: #e74c3c; }
+
+/* 區塊樣式 */
+.section-box { 
+    background: var(--card-bg); 
+    color: var(--text-color);
+    padding: 20px; 
+    border-radius: 8px; 
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
+    margin-bottom: 25px; 
+}
+
+input, select, textarea { 
+    padding: 10px; 
+    margin-right: 10px; 
+    margin-top: 5px; 
+    border: 1px solid var(--border-color); 
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border-radius: 4px; 
+}
+
+/* 按鈕全面跟隨主題色 */
+button:not(.theme-btn), 
+.btn-primary, 
+input[type="submit"],
+button[type="submit"],
+.month-nav-btn, 
+.calendar-btn { 
+    background-color: var(--primary-color) !important; 
+    color: #ffffff !important; 
+    border: none; 
+    border-radius: 4px;
+    cursor: pointer; 
+    transition: 0.2s; 
+    padding: 10px;
+}
+
+button:not(.theme-btn):hover { 
+    opacity: 0.9; 
+}
+
+/* 雙欄排版：左側日曆消費紀錄，右側快速記帳 */
+.grid-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+.calendar-mock { background: var(--card-bg); padding: 15px; border: 1px dashed var(--border-color); border-radius: 6px; min-height: 200px; }
+.day-item { background: var(--card-bg); color: var(--text-color); padding: 10px; margin-bottom: 8px; border-radius: 4px; border: 1px solid var(--border-color); border-left: 3px solid var(--primary-color); box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+
+/* 月曆格子樣式 */
+.calendar-cell {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    min-height: 80px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: 0.2s;
+}
+.calendar-cell:hover {
+    background: var(--bg-color);
+}
+.calendar-cell.empty {
+    background: var(--card-bg);
+    border: 1px dashed var(--border-color);
+    opacity: 0.6;
+}
+.calendar-cell .date-num {
+    font-weight: bold;
+    font-size: 14px;
+    color: var(--text-color);
+}
+
+/* 色系切換按鈕的外觀樣式 */
+.theme-btn-group {
+    display: flex;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.theme-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.theme-btn:hover {
+    transform: scale(1.1);
+}
+
+.theme-btn.active-theme {
+    border-color: #333;
+    box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--primary-color);
+}
+/* ==========================================
+   📅 讓月曆裡面的消費小項目背景與文字同步跟隨主題色
+   ========================================== */
+
+/* 月曆格子裡的消費項目標籤 */
+.calendar-cell div[style*="background"], 
+.calendar-cell .expense-tag,
+.calendar-item,
+.day-expense-item {
+    background-color: var(--bg-color) !important;
+    color: var(--text-color) !important;
+    border-left: 2px solid var(--primary-color) !important;
+    border-radius: 4px;
+    padding: 2px 6px;
+    margin-top: 2px;
+    font-size: 12px;
+}
+/* ==========================================
+   📱 RWD 手機版響應式優化 (螢幕寬度小於 768px 時觸發)
+   ========================================== */
+@media screen and (max-width: 768px) {
+    /* 1. 讓整體容器改為上下堆疊，側邊欄移到上方或自動縮小 */
+    body {
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    /* 2. 側邊欄改為橫向排列或置頂選單，避免佔用左側空間 */
+    .sidebar {
+        width: 100% !important;
+        height: auto !important;
+        position: relative !important;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 5px;
+        padding: 10px;
+        margin-bottom: 15px;
+        border-radius: 8px;
+    }
+
+    /* 3. 主畫面容器佔滿 100% 寬度 */
+    .main-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+        padding: 10px !important;
+    }
+
+    /* 4. 將原本左右並排的兩欄式 Grid 改為單欄上下排列 */
+    .card-container, 
+    div[style*="display: grid"],
+    div[style*="grid-template-columns"] {
+        grid-template-columns: 1fr !important;
+        gap: 15px !important;
+    }
+
+    /* 5. 表格與卡片內寬度自動適配 */
+    .section-box, .page-view, .card {
+        width: 100% !important;
+        box-sizing: border-box;
+    }
+}
