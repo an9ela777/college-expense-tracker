@@ -322,63 +322,53 @@ button:not(.theme-btn):hover {
     }
 }
 /* ==========================================
-   📱 手機版專屬極致排版與圖表修正 (max-width: 768px)
+   📱 手機版最終完美修正 (max-width: 768px)
    ========================================== */
 @media screen and (max-width: 768px) {
-    /* 1. 頂部區域調整：讓「我的小金庫」跟導覽按鈕上下分行 */
+    /* 1. 頂部導覽列精準控制：「我的小金庫」一行，五個按鈕同一列 */
     .sidebar, 
     div[style*="display: flex"] {
         display: flex !important;
-        flex-direction: column !important; /* 改為上下垂直排列 */
+        flex-direction: column !important;
         align-items: center !important;
-        gap: 10px !important;
-        padding: 15px 10px !important;
+        gap: 8px !important;
+        padding: 10px !important;
     }
 
-    /* 讓導覽按鈕區塊變成橫向整齊排列在第二行 */
+    /* 將導覽按鈕區塊強制改為同一列橫向排列並自動縮小間距 */
     .sidebar {
         flex-direction: row !important;
-        flex-wrap: wrap !important;
+        flex-wrap: nowrap !important; /* 不換行，全塞同一列 */
         justify-content: center !important;
+        gap: 4px !important;
+        width: 100% !important;
     }
 
     .sidebar a, 
     .menu-btn {
-        font-size: 14px !important;
-        padding: 6px 12px !important;
-        background-color: rgba(255, 255, 255, 0.5);
-        border-radius: 6px;
+        font-size: 12px !important;
+        padding: 6px 8px !important;
+        white-space: nowrap !important; /* 文字不換行 */
     }
 
-    /* 2. 統計圖表容器修復：確保圖表在手機上有固定高度與寬度，不會塌陷消失 */
+    /* 2. 統計圖表容器修復：確保手機上有足夠高度顯示圓餅圖 */
     .chart-container, 
-    canvas, 
-    div[style*="canvas"] {
+    canvas {
         width: 100% !important;
         max-width: 100% !important;
-        height: auto !important;
-        min-height: 250px !important;
+        height: 220px !important;
+        min-height: 220px !important;
         display: block !important;
+        margin: 0 auto !important;
     }
 
-    /* 3. 月曆縮小與邊界防溢出修正 */
-    .calendar-grid, 
-    div[style*="grid-template-columns: repeat(7"] {
+    /* 3. 統計數據分類卡片：改為兩欄並排，解決直排太擠的問題 */
+    div[style*="grid-template-columns"], 
+    .stats-card-container,
+    .category-stats {
         display: grid !important;
-        grid-template-columns: repeat(7, 1fr) !important;
+        grid-template-columns: 1fr 1fr !important; /* 改成漂亮的左右兩欄 */
+        gap: 10px !important;
         width: 100% !important;
-        box-sizing: border-box !important;
-        gap: 2px !important;
-    }
-
-    /* 縮小月曆日期格子內距與字體，避免撐破外框 */
-    .calendar-day, 
-    div[style*="grid-template-columns: repeat(7"] > div {
-        min-width: 0 !important;
-        padding: 6px 1px !important;
-        font-size: 11px !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
-        box-sizing: border-box !important;
     }
 }
