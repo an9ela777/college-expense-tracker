@@ -805,7 +805,7 @@ function changeTheme(themeName) {
     }
 }
 // ==========================================
-// 🔐 密碼解鎖與名字輸入彈窗初始化 (完整修正版)
+// 🔐 密碼解鎖與名字輸入彈窗初始化 (精準修復版)
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
     const lockScreen = document.getElementById('lock-screen');
@@ -832,17 +832,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // 2. 檢查是否需要顯示密碼解鎖畫面
+    // 2. 檢查本機是否真的有存過密碼
     const savedPwd = localStorage.getItem('piggy_bank_password');
-    if (!savedPwd && lockScreen) {
-        const lockTitle = document.getElementById('lock-title');
-        const lockDesc = document.getElementById('lock-desc');
+    const lockTitle = document.getElementById('lock-title');
+    const lockDesc = document.getElementById('lock-desc');
+
+    if (!savedPwd) {
+        // 確確實實「沒有」設定過密碼才顯示註冊介面
         if (lockTitle) lockTitle.textContent = '🔒 設定您的金庫密碼';
         if (lockDesc) lockDesc.textContent = '請輸入您日後要使用的解鎖密碼';
         if (submitBtn) submitBtn.textContent = '確認並設定密碼';
+    } else {
+        // 已經有密碼了，維持正常的解鎖畫面
+        if (lockTitle) lockTitle.textContent = '🔒 金庫已上鎖';
+        if (lockDesc) lockDesc.textContent = '請輸入您的密碼以解鎖您的專屬記帳本';
+        if (submitBtn) submitBtn.textContent = '解鎖金庫';
     }
 
-    // 3. 密碼解鎖按鈕點擊事件
+    // 3. 密碼按鈕點擊事件
     if (submitBtn && lockScreen && passwordInput) {
         submitBtn.addEventListener('click', () => {
             const val = passwordInput.value.trim();
@@ -853,7 +860,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (!savedPwd) {
-                // 第一次設定密碼
+                // 第一次註冊新密碼
                 localStorage.setItem('piggy_bank_password', val);
                 lockScreen.style.setProperty('display', 'none', 'important');
                 
@@ -862,7 +869,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     nameModal.style.setProperty('display', 'flex', 'important');
                 }
             } else {
-                // 驗證密碼
+                // 驗證原本的密碼
                 if (val === savedPwd) {
                     lockScreen.style.setProperty('display', 'none', 'important');
                     
