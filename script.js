@@ -823,51 +823,89 @@ document.addEventListener('DOMContentLoaded', () => {
         sidebarTitle.textContent = savedName;
     }
 
-    // 2. 密碼解鎖按鈕點擊事件
-    if (submitBtn) {
-    submitBtn.addEventListener('click', () => {
-        const val = passwordInput.value.trim();
-        
-        // 1. 如果輸入框是空的，才跳出請輸入密碼
-        if (!val) {
-            alert('請輸入密碼！');
-            return;
-        }
+   // ==========================================
+// 🔐 完整修正：密碼解鎖與名字輸入彈窗初始化
+// ==========================================
+document.addEventListener('DOMContentLoaded', () => {
+    const lockScreen = document.getElementById('lock-screen');
+    const passwordInput = document.getElementById('lock-password-input');
+    const submitBtn = document.getElementById('lock-submit-btn');
+    
+    const nameModal = document.getElementById('name-modal');
+    const modalNameInput = document.getElementById('modal-name-input');
+    const modalSubmitBtn = document.getElementById('modal-submit-btn');
+    const sidebarTitle = document.getElementById('sidebar-title');
 
-        const savedPwd = localStorage.getItem('piggy_bank_password');
-        
-        if (!savedPwd) {
-            // 第一次設定密碼
-            localStorage.setItem('piggy_bank_password', val);
-            lockScreen.style.display = 'none';
+    // 1. 檢查是否已經設定過名字與主題
+    const savedName = localStorage.getItem('piggy_bank_name');
+    if (savedName && sidebarTitle) {
+        sidebarTitle.textContent = savedName;
+    }
+
+    const savedTheme = localStorage.getItem('user_theme');
+    if (savedTheme && savedTheme !== 'default') {
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        const selector = document.getElementById('themeSelector');
+        if (selector) {
+            selector.value = savedTheme;
+        }
+    }
+
+    // 2. 檢查是否需要顯示密碼解鎖畫面
+    // (如果使用者已經設定過密碼，保留 lock-screen 顯示；若未設定則提示設定)
+    const savedPwd = localStorage.getItem('piggy_bank_password');
+    if (!savedPwd && lockScreen) {
+        const lockTitle = document.getElementById('lock-title');
+        const lockDesc = document.getElementById('lock-desc');
+        if (lockTitle) lockTitle.textContent = '🔒 設定您的金庫密碼';
+        if (lockDesc) lockDesc.textContent = '請輸入您日後要使用的解鎖密碼';
+        if (submitBtn) submitBtn.textContent = '確認並設定密碼';
+    }
+
+    // 3. 密碼解鎖按鈕點擊事件
+    if (submitBtn && lockScreen && passwordInput) {
+        submitBtn.addEventListener('click', () => {
+            const val = passwordInput.value.trim();
             
-            // 接著跳出名字輸入彈窗
-            const nameModal = document.getElementById('name-modal');
-            if (nameModal && !localStorage.getItem('piggy_bank_name')) {
-                nameModal.style.display = 'flex';
+            if (!val) {
+                alert('請輸入密碼！');
+                return;
             }
-        } else {
-            // 驗證密碼
-            if (val === savedPwd) {
-                // 密碼正確直接隱藏解鎖畫面，絕不囉嗦跳警告！
-                lockScreen.style.display = 'none';
+
+            if (!savedPwd) {
+                // 第一次設定密碼
+                localStorage.setItem('piggy_bank_password', val);
+                lockScreen.style.setProperty('display', 'none', 'important');
                 
-                // 接著如果沒填過名字，跳出名字輸入彈窗
-                const nameModal = document.getElementById('name-modal');
+                // 接著檢查是否需要填名字
                 if (nameModal && !localStorage.getItem('piggy_bank_name')) {
-                    nameModal.style.display = 'flex';
+                    nameModal.style.setProperty('display', 'flex', 'important');
                 }
             } else {
-                alert('密碼錯誤，請重新輸入！');
-                passwordInput.value = '';
+                // 驗證密碼
+                if (val === savedPwd) {
+                    lockScreen.style.setProperty('display', 'none', 'important');
+                    
+                    // 檢查是否需要填名字
+                    if (nameModal && !localStorage.getItem('piggy_bank_name')) {
+                        nameModal.style.setProperty('display', 'flex', 'important');
+                    }
+                } else {
+                    alert('密碼錯誤，請重新輸入！');
+                    passwordInput.value = '';
+                }
             }
-        }
-    });
-}
-          
-          
-    // 3. 名字輸入彈窗送出按鈕事件
-    if (modalSubmitBtn) {
+        });
+
+        passwordInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                submitBtn.click();
+            }
+        });
+    }
+
+    // 4. 名字輸入彈窗送出按鈕事件
+    if (modalSubmitBtn && modalNameInput && nameModal) {
         modalSubmitBtn.addEventListener('click', () => {
             const nameVal = modalNameInput.value.trim();
             if (!nameVal) {
@@ -883,23 +921,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // 關閉名字彈窗
-            nameModal.style.display = 'none';
+            nameModal.style.setProperty('display', 'none', 'important');
         });
 
         modalNameInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') modalSubmitBtn.click();
+            if (e.key === 'Enter') {
+                modalSubmitBtn.click();
+            }
         });
-    }
-});
-
-// 網頁載入時，自動套用使用者上一次選擇的色系
-window.addEventListener('DOMContentLoaded', () => {
-    const savedTheme = localStorage.getItem('user_theme');
-    if (savedTheme && savedTheme !== 'default') {
-        document.documentElement.setAttribute('data-theme', savedTheme);
-        const selector = document.getElementById('themeSelector');
-        if (selector) {
-            selector.value = savedTheme;
-        }
     }
 });
