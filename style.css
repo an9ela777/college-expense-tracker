@@ -321,67 +321,64 @@ button:not(.theme-btn):hover {
         box-sizing: border-box;
     }
 }
+/* ==========================================
+   📱 手機版專屬極致排版與圖表修正 (max-width: 768px)
+   ========================================== */
 @media screen and (max-width: 768px) {
-    /* 讓手機版的頂部選單更緊湊、水平滾動或置中排列，避免擠壓 */
+    /* 1. 頂部區域調整：讓「我的小金庫」跟導覽按鈕上下分行 */
+    .sidebar, 
+    div[style*="display: flex"] {
+        display: flex !important;
+        flex-direction: column !important; /* 改為上下垂直排列 */
+        align-items: center !important;
+        gap: 10px !important;
+        padding: 15px 10px !important;
+    }
+
+    /* 讓導覽按鈕區塊變成橫向整齊排列在第二行 */
     .sidebar {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 8px;
-        padding: 12px;
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
     }
 
-    .sidebar a {
-        font-size: 14px;
-        padding: 6px 10px;
+    .sidebar a, 
+    .menu-btn {
+        font-size: 14px !important;
+        padding: 6px 12px !important;
+        background-color: rgba(255, 255, 255, 0.5);
+        border-radius: 6px;
     }
 
-    /* 修正手機版月曆星期直排的問題，確保正常橫向顯示 */
+    /* 2. 統計圖表容器修復：確保圖表在手機上有固定高度與寬度，不會塌陷消失 */
+    .chart-container, 
+    canvas, 
+    div[style*="canvas"] {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto !important;
+        min-height: 250px !important;
+        display: block !important;
+    }
+
+    /* 3. 月曆縮小與邊界防溢出修正 */
     .calendar-grid, 
     div[style*="grid-template-columns: repeat(7"] {
         display: grid !important;
         grid-template-columns: repeat(7, 1fr) !important;
-        font-size: 12px;
-    }
-}
-/* ==========================================
-   📱 手機版導覽列與月曆排版完美修正
-   ========================================== */
-@media screen and (max-width: 768px) {
-    /* 1. 讓頂部導覽列按鈕在手機上縮小、並排得更緊湊 */
-    .sidebar, 
-    div[style*="display: flex"] {
-        display: flex !important;
-        flex-direction: row !important;
-        flex-wrap: wrap !important;
-        justify-content: center !important;
-        gap: 6px !important;
-        padding: 8px !important;
-    }
-
-    /* 讓導覽按鈕字體與邊距縮小，全部塞在同一塊區塊內 */
-    .sidebar a, 
-    .menu-btn {
-        font-size: 13px !important;
-        padding: 4px 8px !important;
-        margin: 2px !important;
-    }
-
-    /* 2. 嚴格限制月曆容器與格子大小，避免超出畫面右側 */
-    .calendar-grid {
         width: 100% !important;
         box-sizing: border-box !important;
-        grid-template-columns: repeat(7, 1fr) !important;
-        gap: 3px !important;
+        gap: 2px !important;
     }
 
-    /* 讓月曆每一格的寬度自適應，文字縮小不溢出 */
+    /* 縮小月曆日期格子內距與字體，避免撐破外框 */
     .calendar-day, 
     div[style*="grid-template-columns: repeat(7"] > div {
         min-width: 0 !important;
-        padding: 4px 2px !important;
-        font-size: 12px !important;
+        padding: 6px 1px !important;
+        font-size: 11px !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
         box-sizing: border-box !important;
     }
 }
