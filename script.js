@@ -805,26 +805,7 @@ function changeTheme(themeName) {
     }
 }
 // ==========================================
-// 🔐 密碼解鎖 與 👤 名字彈窗聯動邏輯
-// ==========================================
-document.addEventListener('DOMContentLoaded', () => {
-    const lockScreen = document.getElementById('lock-screen');
-    const passwordInput = document.getElementById('lock-password-input');
-    const submitBtn = document.getElementById('lock-submit-btn');
-    
-    const nameModal = document.getElementById('name-modal');
-    const modalNameInput = document.getElementById('modal-name-input');
-    const modalSubmitBtn = document.getElementById('modal-submit-btn');
-    const sidebarTitle = document.getElementById('sidebar-title');
-
-    // 1. 檢查是否已經設定過名字
-    const savedName = localStorage.getItem('piggy_bank_name');
-    if (savedName && sidebarTitle) {
-        sidebarTitle.textContent = savedName;
-    }
-
-   // ==========================================
-// 🔐 完整修正：密碼解鎖與名字輸入彈窗初始化
+// 🔐 密碼解鎖與名字輸入彈窗初始化 (完整修正版)
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
     const lockScreen = document.getElementById('lock-screen');
@@ -852,7 +833,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 2. 檢查是否需要顯示密碼解鎖畫面
-    // (如果使用者已經設定過密碼，保留 lock-screen 顯示；若未設定則提示設定)
     const savedPwd = localStorage.getItem('piggy_bank_password');
     if (!savedPwd && lockScreen) {
         const lockTitle = document.getElementById('lock-title');
