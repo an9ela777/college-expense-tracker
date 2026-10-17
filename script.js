@@ -382,30 +382,10 @@ function renderChart() {
         { key: 'other', name: '其他', color: '#d4d8dd' }
     ];
 
+    // 清空右側那五個方塊的容器（將其隱藏或清空）
     const statsListContainer = document.getElementById('category-stats-list');
     if (statsListContainer) {
-        statsListContainer.innerHTML = '';
-
-        categoriesInfo.forEach(cat => {
-            const amount = categoryTotals[cat.key];
-            const percentage = totalExpenseSum > 0 ? ((amount / totalExpenseSum) * 100).toFixed(1) : 0;
-
-            const itemDiv = document.createElement('div');
-            itemDiv.style.display = 'flex';
-            itemDiv.style.justifyContent = 'space-between';
-            itemDiv.style.alignItems = 'center';
-            itemDiv.style.padding = '8px 12px';
-            itemDiv.style.backgroundColor = '#f9f9f9';
-            itemDiv.style.borderRadius = '6px';
-            itemDiv.style.borderLeft = `4px solid ${cat.color}`;
-
-            itemDiv.innerHTML = `
-                <span style="font-size: 14px; font-weight: 500; color: #333;">${cat.name}</span>
-                <span style="font-size: 14px; color: #555;">$${amount} <strong style="color: #8698b1; margin-left: 8px;">(${percentage}%)</strong></span>
-            `;
-
-            statsListContainer.appendChild(itemDiv);
-        });
+        statsListContainer.innerHTML = ''; 
     }
 
     const chartData = categoriesInfo.map(cat => categoryTotals[cat.key]);
@@ -430,6 +410,16 @@ function renderChart() {
             plugins: {
                 legend: {
                     position: 'bottom',
+                },
+                // 自訂圓餅圖提示框（Tooltip），讓它顯示百分比 % 而不是金額
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const value = context.raw || 0;
+                            const percentage = totalExpenseSum > 0 ? ((value / totalExpenseSum) * 100).toFixed(1) : 0;
+                            return ` ${context.label}: ${percentage}% ($${value})`;
+                        }
+                    }
                 }
             }
         }
