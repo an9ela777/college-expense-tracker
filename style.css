@@ -322,53 +322,41 @@ button:not(.theme-btn):hover {
     }
 }
 /* ==========================================
-   📱 手機版最終完美修正 (max-width: 768px)
+   📱 手機版月曆與統計頁面最終完美修正 (max-width: 768px)
    ========================================== */
 @media screen and (max-width: 768px) {
-    /* 1. 頂部導覽列精準控制：「我的小金庫」一行，五個按鈕同一列 */
-    .sidebar, 
+    /* 1. 修正月曆星期標題：強制讓星期日到星期六維持 7 欄橫向排列 */
+    .calendar-weekdays, 
+    div[style*="grid-template-columns: repeat(7"] {
+        display: grid !important;
+        grid-template-columns: repeat(7, 1fr) !important;
+        width: 100% !important;
+        text-align: center !important;
+    }
+
+    /* 確保星期文字在手機上不換行、字體縮小 */
+    .calendar-weekdays div, 
+    div[style*="grid-template-columns: repeat(7"] > div {
+        font-size: 11px !important;
+        padding: 2px 0 !important;
+        text-align: center !important;
+    }
+
+    /* 2. 修正統計頁面：把圓餅圖跟分類卡片改為上下堆疊，卡片改為漂亮的兩欄 */
+    .stats-container, 
     div[style*="display: flex"] {
-        display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
-        gap: 8px !important;
-        padding: 10px !important;
     }
 
-    /* 將導覽按鈕區塊強制改為同一列橫向排列並自動縮小間距 */
-    .sidebar {
-        flex-direction: row !important;
-        flex-wrap: nowrap !important; /* 不換行，全塞同一列 */
-        justify-content: center !important;
-        gap: 4px !important;
-        width: 100% !important;
-    }
-
-    .sidebar a, 
-    .menu-btn {
-        font-size: 12px !important;
-        padding: 6px 8px !important;
-        white-space: nowrap !important; /* 文字不換行 */
-    }
-
-    /* 2. 統計圖表容器修復：確保手機上有足夠高度顯示圓餅圖 */
-    .chart-container, 
-    canvas {
-        width: 100% !important;
-        max-width: 100% !important;
-        height: 220px !important;
-        min-height: 220px !important;
-        display: block !important;
-        margin: 0 auto !important;
-    }
-
-    /* 3. 統計數據分類卡片：改為兩欄並排，解決直排太擠的問題 */
-    div[style*="grid-template-columns"], 
+    /* 讓統計分類卡片區塊移到圖表下方，改為左右兩欄並排，寬度 100% */
+    .category-stats, 
     .stats-card-container,
-    .category-stats {
+    div[style*="grid-template-columns: 1fr 1fr"] {
         display: grid !important;
-        grid-template-columns: 1fr 1fr !important; /* 改成漂亮的左右兩欄 */
+        grid-template-columns: 1fr 1fr !important;
         gap: 10px !important;
         width: 100% !important;
+        margin-top: 15px !important;
     }
 }
