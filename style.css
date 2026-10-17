@@ -321,3 +321,27 @@ button:not(.theme-btn):hover {
         box-sizing: border-box;
     }
 }
+@media screen and (max-width: 768px) {
+    /* 讓手機版的頂部選單更緊湊、水平滾動或置中排列，避免擠壓 */
+    .sidebar {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+        padding: 12px;
+    }
+
+    .sidebar a {
+        font-size: 14px;
+        padding: 6px 10px;
+    }
+
+    /* 修正手機版月曆星期直排的問題，確保正常橫向顯示 */
+    .calendar-grid, 
+    div[style*="grid-template-columns: repeat(7"] {
+        display: grid !important;
+        grid-template-columns: repeat(7, 1fr) !important;
+        font-size: 12px;
+    }
+}
