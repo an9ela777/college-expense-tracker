@@ -322,41 +322,52 @@ button:not(.theme-btn):hover {
     }
 }
 /* ==========================================
-   📱 手機版月曆與統計頁面最終完美修正 (max-width: 768px)
+   📱 手機版最終完美修正 (max-width: 768px)
    ========================================== */
 @media screen and (max-width: 768px) {
-    /* 1. 修正月曆星期標題：強制讓星期日到星期六維持 7 欄橫向排列 */
-    .calendar-weekdays, 
-    div[style*="grid-template-columns: repeat(7"] {
-        display: grid !important;
-        grid-template-columns: repeat(7, 1fr) !important;
-        width: 100% !important;
-        text-align: center !important;
-    }
-
-    /* 確保星期文字在手機上不換行、字體縮小 */
-    .calendar-weekdays div, 
-    div[style*="grid-template-columns: repeat(7"] > div {
-        font-size: 11px !important;
-        padding: 2px 0 !important;
-        text-align: center !important;
-    }
-
-    /* 2. 修正統計頁面：把圓餅圖跟分類卡片改為上下堆疊，卡片改為漂亮的兩欄 */
-    .stats-container, 
+   /* 頂部導覽 */
+    .sidebar, 
     div[style*="display: flex"] {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 4px !important;
+        padding: 8px 4px !important;
+    }
+/* 讓「我的小金庫」跟其他按鈕都能塞在上方區塊 */
+    .sidebar h2, 
+    #sidebar-title,
+    div[style*="display: flex"] > h2 {
+        font-size: 16px !important;
+        margin-right: 6px !important;
+    }
+   /* 縮小 5 個切換按鈕的字體與內距，確保同一列放得下 */
+    .sidebar a, 
+    .menu-btn {
+        font-size: 11px !important;
+        padding: 4px 6px !important;
+        margin: 1px !important;
+        white-space: nowrap !important;
+    }
+
+    /* 2. 統計頁面：圓餅圖與分類卡片改為上下堆疊 */
+    .stats-container, 
+    div[style*="display: flex;"] {
         flex-direction: column !important;
         align-items: center !important;
     }
 
-    /* 讓統計分類卡片區塊移到圖表下方，改為左右兩欄並排，寬度 100% */
+    /* 讓統計數據卡片移到圓餅圖正下方，並改為左右兩欄並排 */
     .category-stats, 
     .stats-card-container,
     div[style*="grid-template-columns: 1fr 1fr"] {
         display: grid !important;
         grid-template-columns: 1fr 1fr !important;
-        gap: 10px !important;
+        gap: 8px !important;
         width: 100% !important;
         margin-top: 15px !important;
+        box-sizing: border-box !important;
     }
 }
