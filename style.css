@@ -345,3 +345,43 @@ button:not(.theme-btn):hover {
         font-size: 12px;
     }
 }
+/* ==========================================
+   📱 手機版導覽列與月曆排版完美修正
+   ========================================== */
+@media screen and (max-width: 768px) {
+    /* 1. 讓頂部導覽列按鈕在手機上縮小、並排得更緊湊 */
+    .sidebar, 
+    div[style*="display: flex"] {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        gap: 6px !important;
+        padding: 8px !important;
+    }
+
+    /* 讓導覽按鈕字體與邊距縮小，全部塞在同一塊區塊內 */
+    .sidebar a, 
+    .menu-btn {
+        font-size: 13px !important;
+        padding: 4px 8px !important;
+        margin: 2px !important;
+    }
+
+    /* 2. 嚴格限制月曆容器與格子大小，避免超出畫面右側 */
+    .calendar-grid {
+        width: 100% !important;
+        box-sizing: border-box !important;
+        grid-template-columns: repeat(7, 1fr) !important;
+        gap: 3px !important;
+    }
+
+    /* 讓月曆每一格的寬度自適應，文字縮小不溢出 */
+    .calendar-day, 
+    div[style*="grid-template-columns: repeat(7"] > div {
+        min-width: 0 !important;
+        padding: 4px 2px !important;
+        font-size: 12px !important;
+        box-sizing: border-box !important;
+    }
+}
