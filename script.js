@@ -805,7 +805,7 @@ function changeTheme(themeName) {
     }
 }
 // ==========================================
-// 🔐 絕對穩定的密碼解鎖強制修復版
+// 🔐 強制重設密碼為 1234
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
     const lockScreen = document.getElementById('lock-screen');
@@ -814,26 +814,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const lockTitle = document.getElementById('lock-title');
     const lockDesc = document.getElementById('lock-desc');
 
-    // 如果本機沒有密碼，預設幫它設定成 "1234"（你也可以改成你想要的預設密碼）
-    if (!localStorage.getItem('piggy_bank_password')) {
-        localStorage.setItem('piggy_bank_password', '1234');
-    }
+    // 強制把本機密碼覆蓋為 1234，確保一定對應得到
+    localStorage.setItem('piggy_bank_password', '1234');
 
     if (lockTitle) lockTitle.textContent = '🔒 金庫已上鎖';
-    if (lockDesc) lockDesc.textContent = '預設密碼為 1234 (或您先前設定的密碼)';
+    if (lockDesc) lockDesc.textContent = '請輸入解鎖密碼：1234';
     if (submitBtn) submitBtn.textContent = '解鎖金庫';
 
     if (submitBtn) {
         submitBtn.addEventListener('click', () => {
             const val = passwordInput.value.trim();
-            const correctPwd = localStorage.getItem('piggy_bank_password') || '1234';
-
-            if (val === correctPwd) {
+            
+            if (val === '1234') {
                 if (lockScreen) {
                     lockScreen.style.setProperty('display', 'none', 'important');
                 }
             } else {
-                alert('密碼錯誤！(提示：預設為 1234)');
+                alert('密碼錯誤！請輸入 1234');
                 passwordInput.value = '';
             }
         });
