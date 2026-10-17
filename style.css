@@ -322,44 +322,77 @@ button:not(.theme-btn):hover {
     }
 }
 /* ==========================================
-   📱 手機版最終完美修正 (max-width: 768px)
+   📱 手機版最終精準排版 (max-width: 768px)
    ========================================== */
 @media screen and (max-width: 768px) {
-   /* 頂部導覽 */
+    /* 1. 頂部區域：第一行「我的小金庫」，第二行五個按鈕同一列 */
     .sidebar, 
     div[style*="display: flex"] {
         display: flex !important;
-        flex-direction: row !important;
-        flex-wrap: wrap !important;
-        justify-content: center !important;
+        flex-direction: column !important;
         align-items: center !important;
-        gap: 4px !important;
-        padding: 8px 4px !important;
+        gap: 8px !important;
+        padding: 12px 8px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
     }
-/* 讓「我的小金庫」跟其他按鈕都能塞在上方區塊 */
+
+    /* 讓「我的小金庫」標題單獨佔一行 */
     .sidebar h2, 
     #sidebar-title,
     div[style*="display: flex"] > h2 {
-        font-size: 16px !important;
-        margin-right: 6px !important;
+        display: block !important;
+        width: 100% !important;
+        text-align: center !important;
+        font-size: 18px !important;
+        margin-bottom: 4px !important;
     }
-   /* 縮小 5 個切換按鈕的字體與內距，確保同一列放得下 */
+
+    /* 將那五個切換按鈕強制包在同一列橫向排列 */
+    .sidebar {
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+        gap: 2px !important;
+    }
+
     .sidebar a, 
     .menu-btn {
         font-size: 11px !important;
-        padding: 4px 6px !important;
-        margin: 1px !important;
+        padding: 6px 4px !important;
+        margin: 0 !important;
+        text-align: center !important;
+        flex: 1 !important;
         white-space: nowrap !important;
     }
 
-    /* 2. 統計頁面：圓餅圖與分類卡片改為上下堆疊 */
+    /* 2. 日曆（月曆）排版修復：確保 7 欄橫向正常顯示 */
+    .calendar-grid, 
+    div[style*="grid-template-columns: repeat(7"] {
+        display: grid !important;
+        grid-template-columns: repeat(7, 1fr) !important;
+        width: 100% !important;
+        gap: 2px !important;
+        box-sizing: border-box !important;
+    }
+
+    .calendar-day, 
+    div[style*="grid-template-columns: repeat(7"] > div {
+        min-width: 0 !important;
+        padding: 6px 1px !important;
+        font-size: 11px !important;
+        box-sizing: border-box !important;
+        text-align: center !important;
+    }
+
+    /* 3. 統計頁面：圓餅圖在上方，統計數據卡片移到下方改為兩欄 */
     .stats-container, 
     div[style*="display: flex;"] {
         flex-direction: column !important;
         align-items: center !important;
     }
 
-    /* 讓統計數據卡片移到圓餅圖正下方，並改為左右兩欄並排 */
     .category-stats, 
     .stats-card-container,
     div[style*="grid-template-columns: 1fr 1fr"] {
