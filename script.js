@@ -628,7 +628,40 @@ function renderSettingsPage() {
         }
     }, 50);
 }
+// 📦 當網頁載入時檢查是否已設定過名字
+document.addEventListener('DOMContentLoaded', () => {
+    const savedName = localStorage.getItem('piggy_bank_name');
+    const nameModal = document.getElementById('name-modal');
+    
+    if (!savedName) {
+        // 如果還沒有名字，顯示彈窗
+        nameModal.style.display = 'flex';
+    } else {
+        // 如果有名字，更新畫面的標題
+        updateVaultTitle(savedName);
+    }
 
+    // 點擊送出名字按鈕
+    document.getElementById('modal-submit-btn').addEventListener('click', () => {
+        const inputVal = document.getElementById('modal-name-input').value.trim();
+        if (inputVal) {
+            const finalName = `${inputVal}的小金庫`;
+            localStorage.setItem('piggy_bank_name', finalName);
+            updateVaultTitle(finalName);
+            nameModal.style.display = 'none'; // 關閉彈窗
+        } else {
+            alert('請輸入有效名字喔！');
+        }
+    });
+});
+
+// 更新畫面上顯示的小金庫標題函式
+function updateVaultTitle(titleText) {
+    const titleEl = document.getElementById('sidebar-title');
+    if (titleEl) {
+        titleEl.textContent = titleText;
+    }
+}
 document.addEventListener('click', function(e) {
     if (e.target && e.target.id === 'change-pwd-btn') {
         const oldPwdInput = document.getElementById('old-password');
