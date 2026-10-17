@@ -26,16 +26,6 @@ const setNameBtn = document.getElementById('set-name-btn');
 const userNameInput = document.getElementById('user-name-input');
 const vaultTitle = document.getElementById('vault-title');
 
-setNameBtn.addEventListener('click', function() {
-    const userName = userNameInput.value.trim();
-    if (userName === "") {
-        alert("請輸入名字");
-        return;
-    }
-    vaultTitle.textContent = `${userName}的小金庫`;
-    alert(`已成功建立屬於 ${userName} 的小金庫`);
-});
-
 // 3. 抓取表單、顯示容器與預算元素
 const addBtn = document.getElementById('add-btn');
 const expenseDateInput = document.getElementById('expense-date');
@@ -822,6 +812,91 @@ function changeTheme(themeName) {
         localStorage.setItem('user_theme', themeName);
     }
 }
+// ==========================================
+// 🔐 密碼解鎖 與 👤 名字彈窗聯動邏輯
+// ==========================================
+document.addEventListener('DOMContentLoaded', () => {
+    const lockScreen = document.getElementById('lock-screen');
+    const passwordInput = document.getElementById('lock-password-input');
+    const submitBtn = document.getElementById('lock-submit-btn');
+    
+    const nameModal = document.getElementById('name-modal');
+    const modalNameInput = document.getElementById('modal-name-input');
+    const modalSubmitBtn = document.getElementById('modal-submit-btn');
+    const sidebarTitle = document.getElementById('sidebar-title');
+
+    // 1. 檢查是否已經設定過名字
+    const savedName = localStorage.getItem('piggy_bank_name');
+    if (savedName && sidebarTitle) {
+        sidebarTitle.textContent = savedName;
+    }
+
+    // 2. 密碼解鎖按鈕點擊事件
+    if (submitBtn) {
+        submitBtn.addEventListener('click', () => {
+            const val = passwordInput.value.trim();
+            if (!val) {
+                alert('請輸入密碼！');
+                return;
+            }
+
+            const savedPwd = localStorage.getItem('piggy_bank_password');
+            if (!savedPwd) {
+                // 第一次設定密碼
+                localStorage.setItem('piggy_bank_password', val);
+                alert('密碼設定成功！');
+                lockScreen.style.display = 'none';
+                
+                // 解鎖後，如果還沒填過名字，跳出名字輸入彈窗
+                if (!localStorage.getItem('piggy_bank_name')) {
+                    nameModal.style.display = 'flex';
+                }
+            } else {
+                // 驗證密碼
+                if (val === savedPwd) {
+                    lockScreen.style.display = 'none';
+                    
+                    // 解鎖成功後，如果還沒填過名字，跳出名字輸入彈窗
+                    if (!localStorage.getItem('piggy_bank_name')) {
+                        nameModal.style.display = 'flex';
+                    }
+                } else {
+                    alert('密碼錯誤！');
+                    passwordInput.value = '';
+                }
+            }
+        });
+
+        passwordInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') submitBtn.click();
+        });
+    }
+
+    // 3. 名字輸入彈窗送出按鈕事件
+    if (modalSubmitBtn) {
+        modalSubmitBtn.addEventListener('click', () => {
+            const nameVal = modalNameInput.value.trim();
+            if (!nameVal) {
+                alert('請輸入你的名字！');
+                return;
+            }
+
+            const finalName = `${nameVal}的小金庫`;
+            localStorage.setItem('piggy_bank_name', finalName);
+            
+            if (sidebarTitle) {
+                sidebarTitle.textContent = finalName;
+            }
+
+            // 關閉名字彈窗
+            nameModal.style.display = 'none';
+        });
+
+        modalNameInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') modalSubmitBtn.click();
+        });
+    }
+});
 
 // 網頁載入時，自動套用使用者上一次選擇的色系
 window.addEventListener('DOMContentLoaded', () => {
