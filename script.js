@@ -805,7 +805,7 @@ function changeTheme(themeName) {
     }
 }
 // ==========================================
-// 🔐 原本穩定版的密碼解鎖與名字彈窗邏輯
+// 🔐 絕對穩定的密碼解鎖強制修復版
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
     const lockScreen = document.getElementById('lock-screen');
@@ -814,52 +814,33 @@ document.addEventListener('DOMContentLoaded', () => {
     const lockTitle = document.getElementById('lock-title');
     const lockDesc = document.getElementById('lock-desc');
 
-    // 檢查 localStorage 裡面是否已經有設定過密碼
-    const savedPassword = localStorage.getItem('piggy_bank_password');
-
-    if (!savedPassword) {
-        // 如果還沒設定過密碼，提示使用者設定新密碼
-        if (lockTitle) lockTitle.textContent = '設定您的金庫密碼';
-        if (lockDesc) lockDesc.textContent = '請輸入您日後要使用的解鎖密碼';
-        if (submitBtn) submitBtn.textContent = '確認並設定密碼';
-    } else {
-        if (lockTitle) lockTitle.textContent = '🔒 金庫已上鎖';
-        if (lockDesc) lockDesc.textContent = '請輸入您的密碼以解鎖您的專屬記帳本';
-        if (submitBtn) submitBtn.textContent = '解鎖 / 設定密碼';
+    // 如果本機沒有密碼，預設幫它設定成 "1234"（你也可以改成你想要的預設密碼）
+    if (!localStorage.getItem('piggy_bank_password')) {
+        localStorage.setItem('piggy_bank_password', '1234');
     }
 
-    // 點擊解鎖/設定按鈕
+    if (lockTitle) lockTitle.textContent = '🔒 金庫已上鎖';
+    if (lockDesc) lockDesc.textContent = '預設密碼為 1234 (或您先前設定的密碼)';
+    if (submitBtn) submitBtn.textContent = '解鎖金庫';
+
     if (submitBtn) {
         submitBtn.addEventListener('click', () => {
-            const enteredVal = passwordInput.value.trim();
+            const val = passwordInput.value.trim();
+            const correctPwd = localStorage.getItem('piggy_bank_password') || '1234';
 
-            if (!enteredVal) {
-                alert('請輸入密碼！');
-                return;
-            }
-
-            const currentSavedPwd = localStorage.getItem('piggy_bank_password');
-
-            if (!currentSavedPwd) {
-                // 第一次設定密碼
-                localStorage.setItem('piggy_bank_password', enteredVal);
-                alert('密碼設定成功！已為您解鎖金庫');
-                if (lockScreen) lockScreen.style.display = 'none';
-            } else {
-                // 驗證密碼
-                if (enteredVal === currentSavedPwd) {
-                    if (lockScreen) lockScreen.style.display = 'none';
-                } else {
-                    alert('密碼錯誤，請重新輸入！');
-                    passwordInput.value = '';
+            if (val === correctPwd) {
+                if (lockScreen) {
+                    lockScreen.style.setProperty('display', 'none', 'important');
                 }
+            } else {
+                alert('密碼錯誤！(提示：預設為 1234)');
+                passwordInput.value = '';
             }
         });
     }
 
-    // 支援按 Enter 鍵直接解鎖
     if (passwordInput && submitBtn) {
-        passwordInput.addEventListener('keypress', (e) => {
+        passwordInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 submitBtn.click();
             }
