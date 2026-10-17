@@ -805,7 +805,7 @@ function changeTheme(themeName) {
     }
 }
 // ==========================================
-// 🔐 強制重設密碼為 1234
+// 🔐 完美智慧判斷：初次設定 vs 日常解鎖
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
     const lockScreen = document.getElementById('lock-screen');
@@ -813,33 +813,104 @@ document.addEventListener('DOMContentLoaded', () => {
     const submitBtn = document.getElementById('lock-submit-btn');
     const lockTitle = document.getElementById('lock-title');
     const lockDesc = document.getElementById('lock-desc');
+    
+    const nameModal = document.getElementById('name-modal');
+    const modalNameInput = document.getElementById('modal-name-input');
+    const modalSubmitBtn = document.getElementById('modal-submit-btn');
+    const sidebarTitle = document.getElementById('sidebar-title');
 
-    // 強制把本機密碼覆蓋為 1234，確保一定對應得到
-    localStorage.setItem('piggy_bank_password', '1234');
+    // 1. 檢查是否已經設定過名字與主題
+    const savedName = localStorage.getItem('piggy_bank_name');
+    if (savedName && sidebarTitle) {
+        sidebarTitle.textContent = savedName;
+    }
 
-    if (lockTitle) lockTitle.textContent = '🔒 金庫已上鎖';
-    if (lockDesc) lockDesc.textContent = '請輸入解鎖密碼：1234';
-    if (submitBtn) submitBtn.textContent = '解鎖金庫';
+    const savedTheme = localStorage.getItem('user_theme');
+    if (savedTheme && savedTheme !== 'default') {
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        const selector = document.getElementById('themeSelector');
+        if (selector) {
+            selector.value = savedTheme;
+        }
+    }
 
-    if (submitBtn) {
+    // 2. 核心判斷：檢查本機是否已經設定過密碼
+    const savedPwd = localStorage.getItem('piggy_bank_password');
+
+    if (!savedPwd) {
+        // [情況A] 從未設定過密碼 ➡️ 導向「註冊設定」模式
+        if (lockTitle) lockTitle.textContent = '🔒 設定您的金庫密碼';
+        if (lockDesc) lockDesc.textContent = '請輸入您日後要使用的解鎖密碼';
+        if (submitBtn) submitBtn.textContent = '確認並設定密碼';
+    } else {
+        // [情況B] 已經有密碼了 ➡️ 導向「日常解鎖」模式
+        if (lockTitle) lockTitle.textContent = '🔒 金庫已上鎖';
+        if (lockDesc) lockDesc.textContent = '請輸入您的密碼以解鎖您的專屬記帳本';
+        if (submitBtn) submitBtn.textContent = '解鎖金庫';
+    }
+
+    // 3. 按下解鎖 / 設定按鈕的事件
+    if (submitBtn && lockScreen && passwordInput) {
         submitBtn.addEventListener('click', () => {
             const val = passwordInput.value.trim();
             
-            if (val === '1234') {
-                if (lockScreen) {
-                    lockScreen.style.setProperty('display', 'none', 'important');
+            if (!val) {
+                alert('請輸入密碼！');
+                return;
+            }
+
+            const currentSavedPwd = localStorage.getItem('piggy_bank_password');
+
+            if (!currentSavedPwd) {
+                // 初次設定：儲存新密碼
+                localStorage.setItem('piggy_bank_password', val);
+                lockScreen.style.setProperty('display', 'none', 'important');
+                
+                // 如果還沒設定過名字，接著跳出名字輸入彈窗
+                if (nameModal && !localStorage.getItem('piggy_bank_name')) {
+                    nameModal.style.setProperty('display', 'flex', 'important');
                 }
             } else {
-                alert('密碼錯誤！請輸入 1234');
-                passwordInput.value = '';
+                // 日常解鎖：驗證密碼
+                if (val === currentSavedPwd) {
+                    lockScreen.style.setProperty('display', 'none', 'important');
+                } else {
+                    alert('密碼錯誤，請重新輸入！');
+                    passwordInput.value = '';
+                }
+            }
+        });
+
+        passwordInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                submitBtn.click();
             }
         });
     }
 
-    if (passwordInput && submitBtn) {
-        passwordInput.addEventListener('keydown', (e) => {
+    // 4. 名字輸入彈窗送出按鈕事件
+    if (modalSubmitBtn && modalNameInput && nameModal) {
+        modalSubmitBtn.addEventListener('click', () => {
+            const nameVal = modalNameInput.value.trim();
+            if (!nameVal) {
+                alert('請輸入你的名字！');
+                return;
+            }
+
+            const finalName = `${nameVal}的小金庫`;
+            localStorage.setItem('piggy_bank_name', finalName);
+            
+            if (sidebarTitle) {
+                sidebarTitle.textContent = finalName;
+            }
+
+            // 關閉名字彈窗
+            nameModal.style.setProperty('display', 'none', 'important');
+        });
+
+        modalNameInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
-                submitBtn.click();
+                modalSubmitBtn.click();
             }
         });
     }
