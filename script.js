@@ -339,20 +339,26 @@ if (nextMonthBtn) {
 }
 
 // ==========================================
-// 📊 消費比例長條進度條與百分比清單邏輯
+// 📊 原本的 Chart.js 消費比例圓餅圖與百分比清單邏輯
 // ==========================================
+let expenseChart = null;
+
 function renderChart() {
+    const canvasCtx = document.getElementById('expense-chart');
+    if (!canvasCtx) return;
+    const ctx = canvasCtx.getContext('2d');
+
     let categoryTotals = {
         food: 0,
         transport: 0,
         entertainment: 0,
         clothes: 0,
+        fixed: 0,
         other: 0
     };
 
     let totalExpenseSum = 0;
 
-    // 計算各類別總金額與總支出
     expenses.forEach(item => {
         const amount = Number(item.amount) || 0;
         totalExpenseSum += amount;
@@ -380,45 +386,54 @@ function renderChart() {
     if (statsListContainer) {
         statsListContainer.innerHTML = '';
 
-        // 1. 建立下方一長條的「分段比例條」容器
-        const barContainer = document.createElement('div');
-        barContainer.style.cssText = 'display: flex; width: 100%; height: 32px; border-radius: 8px; overflow: hidden; background: #eee; margin-bottom: 20px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);';
-
-        // 2. 建立各類別明細清單容器
-        const detailsContainer = document.createElement('div');
-        detailsContainer.style.cssText = 'display: flex; flex-direction: column; gap: 10px; width: 100%;';
-
         categoriesInfo.forEach(cat => {
             const amount = categoryTotals[cat.key];
             const percentage = totalExpenseSum > 0 ? ((amount / totalExpenseSum) * 100).toFixed(1) : 0;
 
-            // 如果該分類有花費，在長條圖上長出對應比例顏色的區段
-            if (totalExpenseSum > 0 && amount > 0) {
-                const segment = document.createElement('div');
-                segment.style.cssText = `width: ${percentage}%; background-color: ${cat.color}; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; color: #333; white-space: nowrap; overflow: hidden;`;
-                segment.title = `${cat.name}: $${amount} (${percentage}%)`;
-                segment.textContent = `${percentage}%`;
-                barContainer.appendChild(segment);
-            }
-
-            // 建立下方帶有顏色標記的明細列
             const itemDiv = document.createElement('div');
-            itemDiv.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background-color: #fdfdfd; border-radius: 6px; border: 1px solid #eee; border-left: 4px solid ' + cat.color + ';';
+            itemDiv.style.display = 'flex';
+            itemDiv.style.justifyContent = 'space-between';
+            itemDiv.style.alignItems = 'center';
+            itemDiv.style.padding = '8px 12px';
+            itemDiv.style.backgroundColor = '#f9f9f9';
+            itemDiv.style.borderRadius = '6px';
+            itemDiv.style.borderLeft = `4px solid ${cat.color}`;
+
             itemDiv.innerHTML = `
                 <span style="font-size: 14px; font-weight: 500; color: #333;">${cat.name}</span>
                 <span style="font-size: 14px; color: #555;">$${amount} <strong style="color: #8698b1; margin-left: 8px;">(${percentage}%)</strong></span>
             `;
-            detailsContainer.appendChild(itemDiv);
+
+            statsListContainer.appendChild(itemDiv);
         });
-
-        // 如果完全沒有支出，長條顯示灰色預設
-        if (totalExpenseSum === 0) {
-            barContainer.style.background = '#e0e0e0';
-        }
-
-        statsListContainer.appendChild(barContainer);
-        statsListContainer.appendChild(detailsContainer);
     }
+
+    const chartData = categoriesInfo.map(cat => categoryTotals[cat.key]);
+    const chartColors = categoriesInfo.map(cat => cat.color);
+
+    if (expenseChart) {
+        expenseChart.destroy();
+    }
+
+    expenseChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: categoriesInfo.map(cat => cat.name),
+            datasets: [{
+                data: chartData,
+                backgroundColor: chartColors,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                }
+            }
+        }
+    });
 }
 
 // 11. 匯出 CSV 報表功能
