@@ -825,45 +825,47 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 2. 密碼解鎖按鈕點擊事件
     if (submitBtn) {
-        submitBtn.addEventListener('click', () => {
-            const val = passwordInput.value.trim();
-            if (!val) {
-                alert('請輸入密碼！');
-                return;
-            }
+    submitBtn.addEventListener('click', () => {
+        const val = passwordInput.value.trim();
+        
+        // 1. 如果輸入框是空的，才跳出請輸入密碼
+        if (!val) {
+            alert('請輸入密碼！');
+            return;
+        }
 
-            const savedPwd = localStorage.getItem('piggy_bank_password');
-            if (!savedPwd) {
-                // 第一次設定密碼
-                localStorage.setItem('piggy_bank_password', val);
-                alert('密碼設定成功！');
+        const savedPwd = localStorage.getItem('piggy_bank_password');
+        
+        if (!savedPwd) {
+            // 第一次設定密碼
+            localStorage.setItem('piggy_bank_password', val);
+            lockScreen.style.display = 'none';
+            
+            // 接著跳出名字輸入彈窗
+            const nameModal = document.getElementById('name-modal');
+            if (nameModal && !localStorage.getItem('piggy_bank_name')) {
+                nameModal.style.display = 'flex';
+            }
+        } else {
+            // 驗證密碼
+            if (val === savedPwd) {
+                // 密碼正確直接隱藏解鎖畫面，絕不囉嗦跳警告！
                 lockScreen.style.display = 'none';
                 
-                // 解鎖後，如果還沒填過名字，跳出名字輸入彈窗
-                if (!localStorage.getItem('piggy_bank_name')) {
+                // 接著如果沒填過名字，跳出名字輸入彈窗
+                const nameModal = document.getElementById('name-modal');
+                if (nameModal && !localStorage.getItem('piggy_bank_name')) {
                     nameModal.style.display = 'flex';
                 }
             } else {
-                // 驗證密碼
-                if (val === savedPwd) {
-                    lockScreen.style.display = 'none';
-                    
-                    // 解鎖成功後，如果還沒填過名字，跳出名字輸入彈窗
-                    if (!localStorage.getItem('piggy_bank_name')) {
-                        nameModal.style.display = 'flex';
-                    }
-                } else {
-                    alert('密碼錯誤！');
-                    passwordInput.value = '';
-                }
+                alert('密碼錯誤，請重新輸入！');
+                passwordInput.value = '';
             }
-        });
-
-        passwordInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') submitBtn.click();
-        });
-    }
-
+        }
+    });
+}
+          
+          
     // 3. 名字輸入彈窗送出按鈕事件
     if (modalSubmitBtn) {
         modalSubmitBtn.addEventListener('click', () => {
