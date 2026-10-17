@@ -11,20 +11,10 @@
     <link rel="manifest" href="manifest.json">
 </head>
 <body>
-    <!-- 🚀 名字輸入彈窗 (初次進入或未設定時顯示) -->
-    <div id="name-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.6); z-index: 9999; justify-content: center; align-items: center;">
-        <div style="background: white; padding: 30px; border-radius: 12px; width: 85%; max-width: 350px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.2);">
-            <h3 style="margin-bottom: 15px; color: #2c4a3e;">歡迎來到記帳小金庫</h3>
-            <p style="font-size: 14px; color: #666; margin-bottom: 20px;">請輸入你的名字來打造專屬小金庫：</p>
-            <input type="text" id="modal-name-input" placeholder="例如：容德" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 16px; margin-bottom: 20px; box-sizing: border-box;">
-            <button id="modal-submit-btn" style="width: 100%; background: #2c4a3e; color: white; border: none; padding: 12px; border-radius: 6px; font-size: 16px; cursor: pointer;">進入小金庫</button>
-        </div>
-    </div>
-
     <!-- ================= 0. 密碼解鎖登入遮罩 ================= -->
     <div id="lock-screen" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(240, 244, 248, 0.95); z-index: 9999; display: flex; justify-content: center; align-items: center; flex-direction: column;">
         <div style="background: white; padding: 30px 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); text-align: center; max-width: 350px; width: 100%;">
-            <h2 id="lock-title" style="margin-top: 0; color: #333;"> 金庫已上鎖</h2>
+            <h2 id="lock-title" style="margin-top: 0; color: #333;">🔒 金庫已上鎖</h2>
             <p id="lock-desc" style="color: #666; font-size: 14px; margin-bottom: 20px;">請輸入您的密碼以解鎖您的專屬記帳本</p>
             <input type="password" id="lock-password-input" placeholder="請輸入密碼" style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 16px;">
             <button id="lock-submit-btn" style="width: 100%; padding: 10px; background-color: #49596f; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 16px;">解鎖 / 設定密碼</button>
@@ -33,7 +23,7 @@
 
     <!-- 左側選單欄 -->
     <div class="sidebar">
-        <h2 id="sidebar-title">我的小金庫</h2>
+        <h2>我的小金庫</h2>
         <a class="menu-btn active" data-target="overview-page">總覽</a>
         <a class="menu-btn" data-target="calendar-page">月曆</a>
         <a class="menu-btn" data-target="budget-page">預算</a>
@@ -44,6 +34,14 @@
     <!-- 右側主畫面容器 -->
     <div class="main-content">
         
+       <!-- 個人化歡迎與金庫命名區 -->
+            <div class="header-section">
+                <h1 id="vault-title" style="margin: 0; font-size: 24px;">我的小金庫</h1>
+                <div>
+                    <input type="text" id="user-name-input" placeholder="輸入你的名字">
+                    <button id="set-name-btn">打造我的小金庫</button>
+                </div>
+            </div>
         <!-- ================= 1. 總覽頁面 (Overview) ================= -->
         <div id="overview-page" class="page-view active-page">
             <div class="card-container">
@@ -111,10 +109,12 @@
                 <h3 style="margin-top: 0;">預算與固定支出管理</h3>
                 <p style="color: #666; margin-bottom: 25px;">在這裡統籌您的荷包防線與自動化開銷設定，讓財務管理更輕鬆：</p>
                 
+                <!-- 左右雙欄 Grid 排版容器 -->
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: start;">
                     
+                    <!-- 左欄：預算管理設定 -->
                     <div style="background: #fdfdfd; padding: 20px; border-radius: 8px; border: 1px solid #eaeaea;">
-                        <h4 style="margin-top: 0; color: #333; margin-bottom: 15px;"> 預算管理設定</h4>
+                        <h4 style="margin-top: 0; color: #333; margin-bottom: 15px;">💰 預算管理設定</h4>
                         <div style="display: flex; flex-direction: column; gap: 12px;">
                             <div>
                                 <label style="display: block; font-size: 13px; color: #555; margin-bottom: 5px;">周預算上限：</label>
@@ -128,8 +128,9 @@
                         </div>
                     </div>
 
+                    <!-- 右欄：每月固定支出設定 -->
                     <div style="background: #fdfdfd; padding: 20px; border-radius: 8px; border: 1px solid #eaeaea;">
-                        <h4 style="margin-top: 0; color: #333; margin-bottom: 15px;">每月固定支出設定</h4>
+                        <h4 style="margin-top: 0; color: #333; margin-bottom: 15px;">🔄 每月固定支出設定</h4>
                         <div style="display: flex; flex-direction: column; gap: 12px;">
                             <div>
                                 <label style="display: block; font-size: 13px; color: #555; margin-bottom: 5px;">項目名稱：</label>
@@ -152,7 +153,10 @@
                             <button id="add-fixed-btn" style="margin-top: 10px; background-color: #5b708b; color: white; padding: 10px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">新增固定支出項目</button>
                         </div>
 
-                        <div style="margin-top: 20px;" id="fixed-list-container"></div>
+                        <!-- 已設定的固定支出列表容器 -->
+                        <div style="margin-top: 20px;" id="fixed-list-container">
+                            <!-- 動態顯示已儲存的固定支出 -->
+                        </div>
                     </div>
 
                 </div>
@@ -188,19 +192,4 @@
                     <label for="themeSelector" style="font-weight: bold; display: block; margin-bottom: 8px;">選擇介面色系主題：</label>
                     <div class="theme-btn-group">
                         <button class="theme-btn" id="btn-pink" style="background-color: #dda4ac;" onclick="changeTheme('pink')" title="櫻花粉色系"></button>
-                        <button class="theme-btn" id="btn-orange" style="background-color: #d872297b;" onclick="changeTheme('orange')" title="暖橘色系"></button>
-                        <button class="theme-btn" id="btn-yellow" style="background-color: #f6dd91;" onclick="changeTheme('yellow')" title="陽光黃色系"></button>
-                        <button class="theme-btn" id="btn-green" style="background-color: #b5d4ca;" onclick="changeTheme('green')" title="清新綠色系"></button>
-                        <button class="theme-btn" id="btn-default" style="background-color: #b4bdcd;" onclick="changeTheme('default')" title="經典科技藍"></button>
-                        <button class="theme-btn" id="btn-purple" style="background-color: #b6b1c4;" onclick="changeTheme('purple')" title="質感紫色系"></button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div> <!-- 關閉 .main-content -->
-
-    <!-- 引入外部 JavaScript 邏輯檔 -->
-    <script src="script.js"></script>
-</body>
-</html>
+                        <button class="theme-btn" id="btn-orange" style="background-
