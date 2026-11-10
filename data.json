@@ -1,0 +1,6 @@
+{
+  "name": "張容德 (angela)",
+  "major": "輔仁大學 醫學資訊與創新應用學士學位學程",
+  "skills": ["HTML", "CSS", "Git", "Java", "Spring Boot"],
+  "message": "這是透過 Ajax 與 jQuery 動態載入的 JSON 資料！"
+}

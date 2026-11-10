@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>Jeremy's Personal Page</title>
+    <!-- 引入 jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body { font-family: "標楷體", "Times New Roman", serif; text-align: center; margin-top: 50px; }
+        .card { border: 1px solid #ccc; padding: 20px; width: 300px; margin: 20px auto; border-radius: 10px; display: none; }
+        button { padding: 10px 20px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <h1>Welcome to My Personal Page</h1>
+    <button id="loadDataBtn">點擊載入關於我 (使用 jQuery + Ajax)</button>
+
+    <div class="card" id="profileCard">
+        <h2 id="displayName"></h2>
+        <p id="displayMajor"></p>
+        <p><strong>Skills:</strong> <span id="displaySkills"></span></p>
+        <p style="color: #00471b;" id="displayMessage"></p>
+    </div>
+
+    <script>
+        // 這邊就是 jQuery 與 Ajax 的實作
+        $(document).ready(function(){
+            $("#loadDataBtn").click(function(){
+                // 使用 Ajax 發送請求讀取 JSON 檔案
+                $.ajax({
+                    url: "data.json",
+                    type: "GET",
+                    dataType: "json",
+                    success: function(data) {
+                        // 成功抓到資料後，用 jQuery 將資料塞進 HTML 標籤內
+                        $("#displayName").text(data.name);
+                        $("#displayMajor").text(data.major);
+                        $("#displaySkills").text(data.skills.join(", "));
+                        $("#displayMessage").text(data.message);
+                        
+                        // 用 jQuery 特效把卡片淡入顯示
+                        $("#profileCard").fadeIn();
+                    },
+                    error: function() {
+                        alert("資料載入失敗，請確認是否在伺服器環境下執行。");
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
